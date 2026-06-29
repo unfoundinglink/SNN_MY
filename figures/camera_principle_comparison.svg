@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1320" viewBox="0 0 1800 1320">
+  <defs>
+    <style>
+      .title { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 44px; font-weight: 700; fill: #1f2933; }
+      .subtitle { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 24px; fill: #52606d; }
+      .head { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 34px; font-weight: 700; fill: #ffffff; }
+      .step-title { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 26px; font-weight: 700; fill: #102a43; }
+      .step { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 21px; fill: #243b53; }
+      .small { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 18px; fill: #52606d; }
+      .formula { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 22px; fill: #102a43; }
+      .tag { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 19px; font-weight: 700; fill: #ffffff; }
+      .boxL { fill: #e0f2fe; stroke: #0284c7; stroke-width: 2.2; rx: 16; }
+      .boxR { fill: #fff1f2; stroke: #e11d48; stroke-width: 2.2; rx: 16; }
+      .boxC { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; rx: 14; }
+      .headerL { fill: #0369a1; rx: 18; }
+      .headerR { fill: #be123c; rx: 18; }
+      .arrowL { stroke: #0284c7; stroke-width: 4; fill: none; marker-end: url(#arrowBlue); }
+      .arrowR { stroke: #e11d48; stroke-width: 4; fill: none; marker-end: url(#arrowRed); }
+      .dash { stroke: #64748b; stroke-width: 2.4; stroke-dasharray: 8 8; fill: none; }
+    </style>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#0284c7"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#e11d48"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1800" height="1320" fill="#ffffff"/>
+
+  <text x="900" y="70" text-anchor="middle" class="title">普通帧相机 vs 脉冲相机：成像机理对比流程图</text>
+  <text x="900" y="110" text-anchor="middle" class="subtitle">核心差异：普通相机是“固定时间读出积累量”，脉冲相机是“固定阈值记录到达时刻”</text>
+
+  <rect x="90" y="150" width="760" height="72" class="headerL"/>
+  <text x="470" y="197" text-anchor="middle" class="head">普通 RGB / 灰度帧相机</text>
+  <rect x="950" y="150" width="760" height="72" class="headerR"/>
+  <text x="1330" y="197" text-anchor="middle" class="head">脉冲相机 / Spike Camera</text>
+
+  <!-- Left column boxes -->
+  <rect x="90" y="255" width="760" height="115" class="boxL"/>
+  <text x="125" y="292" class="step-title">1. 固定曝光窗口</text>
+  <text x="125" y="326" class="step">所有像素在同一帧曝光时间 Δt 内积累光电子。</text>
+  <text x="125" y="354" class="formula">Q(y,x) = ∫[t, t+Δt] I(y,x,τ)dτ</text>
+
+  <path d="M470 372 L470 407" class="arrowL"/>
+  <rect x="90" y="410" width="760" height="125" class="boxL"/>
+  <text x="125" y="448" class="step-title">2. 曝光结束后读出模拟电荷</text>
+  <text x="125" y="482" class="step">读出的不是事件，而是每个像素在窗口内积累了多少电荷。</text>
+  <text x="125" y="512" class="small">运动物体在 Δt 内移动，会把能量拖成一段轨迹，形成运动模糊。</text>
+
+  <path d="M470 537 L470 572" class="arrowL"/>
+  <rect x="90" y="575" width="760" height="125" class="boxL"/>
+  <text x="125" y="613" class="step-title">3. ADC 转换成多 bit 灰度值</text>
+  <text x="125" y="647" class="step">每个像素通常输出 8/10/12 bit 甚至更高精度。</text>
+  <text x="125" y="677" class="formula">frame[t,y,x] = gray value</text>
+
+  <path d="M470 702 L470 737" class="arrowL"/>
+  <rect x="90" y="740" width="760" height="125" class="boxL"/>
+  <text x="125" y="778" class="step-title">4. RGB 成像或二值阈值化</text>
+  <text x="125" y="812" class="step">RGB 相机输出强度；普通二值相机是在灰度/模拟值上再判阈值。</text>
+  <text x="125" y="842" class="formula">binary[t,y,x] = gray[t,y,x] &gt; θ</text>
+
+  <path d="M470 867 L470 902" class="arrowL"/>
+  <rect x="90" y="905" width="760" height="125" class="boxL"/>
+  <text x="125" y="943" class="step-title">5. 输出语义</text>
+  <text x="125" y="977" class="step">“这个曝光窗口内，该像素有多亮？”</text>
+  <text x="125" y="1007" class="small">即使输出 0/1，1 也表示亮度超过阈值，而不是一次发放事件。</text>
+
+  <!-- Right column boxes -->
+  <rect x="950" y="255" width="760" height="115" class="boxR"/>
+  <text x="985" y="292" class="step-title">1. 像素持续光电积分</text>
+  <text x="985" y="326" class="step">每个像素独立地把光电流积分到本地电容上。</text>
+  <text x="985" y="354" class="formula">V(y,x) ← V(y,x) + ∫ I(y,x,t)dt</text>
+
+  <path d="M1330 372 L1330 407" class="arrowR"/>
+  <rect x="950" y="410" width="760" height="125" class="boxR"/>
+  <text x="985" y="448" class="step-title">2. 达到阈值立即触发 spike</text>
+  <text x="985" y="482" class="step">当积分电压/电荷到达阈值，像素发放一个脉冲 1。</text>
+  <text x="985" y="512" class="formula">if V(y,x) ≥ Vth → spike=1</text>
+
+  <path d="M1330 537 L1330 572" class="arrowR"/>
+  <rect x="950" y="575" width="760" height="125" class="boxR"/>
+  <text x="985" y="613" class="step-title">3. 复位并继续下一轮积分</text>
+  <text x="985" y="647" class="step">发放后该像素复位，不等待整帧曝光结束。</text>
+  <text x="985" y="677" class="small">亮像素更快到阈值，spike 更密；暗像素更慢，spike 更稀。</text>
+
+  <path d="M1330 702 L1330 737" class="arrowR"/>
+  <rect x="950" y="740" width="760" height="125" class="boxR"/>
+  <text x="985" y="778" class="step-title">4. 高速读出二值脉冲状态</text>
+  <text x="985" y="812" class="step">外围电路用行列扫描、锁存或事件仲裁读出 0/1 状态。</text>
+  <text x="985" y="842" class="formula">spike[t,y,x] ∈ {0,1}</text>
+
+  <path d="M1330 867 L1330 902" class="arrowR"/>
+  <rect x="950" y="905" width="760" height="125" class="boxR"/>
+  <text x="985" y="943" class="step-title">5. 输出语义</text>
+  <text x="985" y="977" class="step">“这个像素在这个时刻是否刚刚积累到阈值？”</text>
+  <text x="985" y="1007" class="small">亮度信息藏在 spike 间隔/频率中，而不是单帧灰度值中。</text>
+
+  <!-- Center comparison -->
+  <rect x="180" y="1085" width="1440" height="155" class="boxC"/>
+  <text x="900" y="1125" text-anchor="middle" class="step-title">最关键的数学差别</text>
+  <text x="255" y="1170" class="formula">普通相机：固定 Δt，测量 Q = ∫ I dt，输出“积累了多少”</text>
+  <text x="255" y="1210" class="formula">脉冲相机：固定 Qth / Vth，测量达到阈值的时刻，输出“什么时候满”</text>
+
+  <!-- Tags -->
+  <rect x="118" y="239" width="145" height="34" fill="#0284c7" rx="17"/>
+  <text x="190" y="263" text-anchor="middle" class="tag">时间固定</text>
+  <rect x="978" y="239" width="145" height="34" fill="#e11d48" rx="17"/>
+  <text x="1050" y="263" text-anchor="middle" class="tag">阈值固定</text>
+
+  <!-- Bottom notes -->
+  <text x="900" y="1285" text-anchor="middle" class="subtitle">因此：普通二值相机的 1 表示“亮”；脉冲相机的 1 表示“一次积分到阈值的发放事件”。</text>
+</svg>

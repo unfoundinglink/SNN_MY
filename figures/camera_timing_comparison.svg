@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1180" viewBox="0 0 1900 1180">
+  <defs>
+    <style>
+      .title { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 44px; font-weight: 700; fill: #111827; }
+      .subtitle { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 24px; fill: #4b5563; }
+      .head { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 31px; font-weight: 700; fill: #ffffff; }
+      .label { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #1f2937; }
+      .text { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 21px; fill: #334155; }
+      .small { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 18px; fill: #475569; }
+      .formula { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 21px; fill: #0f172a; }
+      .axis { stroke: #334155; stroke-width: 3; marker-end: url(#arrow); }
+      .tick { stroke: #64748b; stroke-width: 2; }
+      .dash { stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 7 7; }
+      .box { rx: 13; stroke-width: 2; }
+      .blue { fill: #dbeafe; stroke: #2563eb; }
+      .cyan { fill: #cffafe; stroke: #0891b2; }
+      .purple { fill: #ede9fe; stroke: #7c3aed; }
+      .orange { fill: #ffedd5; stroke: #ea580c; }
+      .green { fill: #dcfce7; stroke: #16a34a; }
+      .red { fill: #ffe4e6; stroke: #e11d48; }
+      .gray { fill: #f1f5f9; stroke: #64748b; }
+      .darkBlue { fill: #1d4ed8; }
+      .darkRed { fill: #be123c; }
+      .note { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; rx: 16; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect width="1900" height="1180" fill="#ffffff"/>
+  <text x="950" y="66" text-anchor="middle" class="title">传统相机与脉冲相机的时间消耗对比</text>
+  <text x="950" y="106" text-anchor="middle" class="subtitle">帧率瓶颈通常不是“行列扫描能不能很快”，而是整条成像链路的时间与带宽代价</text>
+
+  <rect x="100" y="150" width="780" height="70" class="darkBlue" rx="18"/>
+  <text x="490" y="196" text-anchor="middle" class="head">传统 RGB / 灰度帧相机</text>
+  <rect x="1020" y="150" width="780" height="70" class="darkRed" rx="18"/>
+  <text x="1410" y="196" text-anchor="middle" class="head">脉冲相机 / Spike Camera</text>
+
+  <!-- axes -->
+  <line x1="130" y1="310" x2="845" y2="310" class="axis"/>
+  <text x="845" y="344" text-anchor="end" class="small">time</text>
+  <line x1="1050" y1="310" x2="1765" y2="310" class="axis"/>
+  <text x="1765" y="344" text-anchor="end" class="small">time</text>
+
+  <!-- traditional timeline -->
+  <text x="130" y="270" class="label">一帧 frame 的典型时间链路</text>
+  <rect x="130" y="360" width="190" height="92" class="box blue"/>
+  <text x="225" y="394" text-anchor="middle" class="label">曝光 / 积分</text>
+  <text x="225" y="424" text-anchor="middle" class="small">固定窗口 Δt</text>
+
+  <rect x="330" y="360" width="130" height="92" class="box cyan"/>
+  <text x="395" y="394" text-anchor="middle" class="label">采样保持</text>
+  <text x="395" y="424" text-anchor="middle" class="small">模拟电荷</text>
+
+  <rect x="470" y="360" width="195" height="92" class="box purple"/>
+  <text x="567" y="394" text-anchor="middle" class="label">ADC 转换</text>
+  <text x="567" y="424" text-anchor="middle" class="small">8/10/12 bit</text>
+
+  <rect x="675" y="360" width="150" height="92" class="box orange"/>
+  <text x="750" y="394" text-anchor="middle" class="label">读出传输</text>
+  <text x="750" y="424" text-anchor="middle" class="small">多 bit 带宽</text>
+
+  <line x1="130" y1="480" x2="825" y2="480" class="dash"/>
+  <text x="130" y="520" class="formula">Frame period ≥ 曝光时间 + ADC/读出/带宽约束</text>
+  <text x="130" y="555" class="small">注：现代 rolling/global shutter 可把部分步骤流水线重叠，但每帧仍要得到完整多 bit 强度图。</text>
+
+  <!-- spike timeline -->
+  <text x="1050" y="270" class="label">连续 spike stream 的典型时间链路</text>
+  <rect x="1050" y="360" width="270" height="92" class="box red"/>
+  <text x="1185" y="394" text-anchor="middle" class="label">像素并行积分</text>
+  <text x="1185" y="424" text-anchor="middle" class="small">不等整帧曝光结束</text>
+
+  <rect x="1335" y="360" width="185" height="92" class="box green"/>
+  <text x="1427" y="394" text-anchor="middle" class="label">阈值比较</text>
+  <text x="1427" y="424" text-anchor="middle" class="small">本地触发 spike</text>
+
+  <rect x="1535" y="360" width="210" height="92" class="box orange"/>
+  <text x="1640" y="394" text-anchor="middle" class="label">二值读出</text>
+  <text x="1640" y="424" text-anchor="middle" class="small">1 bit / 像素 / 时间片</text>
+
+  <line x1="1050" y1="480" x2="1745" y2="480" class="dash"/>
+  <text x="1050" y="520" class="formula">Spike interval ≈ Qth / 光电流；读出的是 0/1 事件状态</text>
+  <text x="1050" y="555" class="small">没有每个时间片的高精度 ADC；亮度由 spike 频率/间隔编码。</text>
+
+  <!-- zoomed pixel behavior -->
+  <rect x="100" y="625" width="780" height="345" class="note"/>
+  <text x="130" y="670" class="label">传统相机：固定时间，测量积累量</text>
+  <line x1="180" y1="900" x2="805" y2="900" class="axis"/>
+  <line x1="180" y1="900" x2="180" y2="720" class="axis"/>
+  <text x="812" y="934" class="small">t</text>
+  <text x="145" y="725" class="small">Q</text>
+  <path d="M180 875 C260 850, 350 815, 460 770 C575 724, 680 690, 780 652" fill="none" stroke="#2563eb" stroke-width="5"/>
+  <line x1="180" y1="900" x2="180" y2="720" stroke="#0284c7" stroke-width="3"/>
+  <line x1="590" y1="900" x2="590" y2="720" stroke="#0284c7" stroke-width="3"/>
+  <text x="385" y="930" text-anchor="middle" class="formula">曝光窗口 Δt</text>
+  <text x="620" y="760" class="text">曝光结束后读出 Q</text>
+  <text x="130" y="1010" class="formula">输出：gray = Q，经 ADC 得到多 bit 像素值</text>
+  <text x="130" y="1045" class="small">高帧率时 Δt 变短，进光少；同时 ADC 和多 bit 数据带宽压力上升。</text>
+
+  <rect x="1020" y="625" width="780" height="345" class="note"/>
+  <text x="1050" y="670" class="label">脉冲相机：固定阈值，记录到达时刻</text>
+  <line x1="1100" y1="900" x2="1725" y2="900" class="axis"/>
+  <line x1="1100" y1="900" x2="1100" y2="720" class="axis"/>
+  <text x="1732" y="934" class="small">t</text>
+  <text x="1065" y="725" class="small">V/Q</text>
+  <line x1="1100" y1="760" x2="1710" y2="760" stroke="#be123c" stroke-width="3" stroke-dasharray="8 8"/>
+  <text x="1120" y="750" class="formula">Vth / Qth</text>
+  <path d="M1100 900 L1210 760 L1210 900 L1320 760 L1320 900 L1430 760 L1430 900 L1540 760 L1540 900 L1650 760 L1650 900" fill="none" stroke="#e11d48" stroke-width="5"/>
+  <circle cx="1210" cy="760" r="8" fill="#e11d48"/>
+  <circle cx="1320" cy="760" r="8" fill="#e11d48"/>
+  <circle cx="1430" cy="760" r="8" fill="#e11d48"/>
+  <circle cx="1540" cy="760" r="8" fill="#e11d48"/>
+  <circle cx="1650" cy="760" r="8" fill="#e11d48"/>
+  <text x="1450" y="930" text-anchor="middle" class="formula">spike 间隔编码亮度</text>
+  <text x="1050" y="1010" class="formula">输出：spike[t,y,x] ∈ {0,1}，1 表示一次阈值发放</text>
+  <text x="1050" y="1045" class="small">读出是低 bit 事件状态；像素复位后继续积分，不需要每个时间片完整灰度 ADC。</text>
+
+  <!-- conclusion -->
+  <rect x="210" y="1085" width="1480" height="58" fill="#fef3c7" stroke="#d97706" stroke-width="2.2" rx="18"/>
+  <text x="950" y="1123" text-anchor="middle" class="subtitle">结论：扫描电路可以很快，但传统相机还要完成固定曝光、多 bit 模拟读出和 ADC；脉冲相机用本地积分-阈值发放 + 1 bit 读出，把亮度转移到时间间隔中表达。</text>
+</svg>
