@@ -39,6 +39,14 @@ This figure explains why the frame-rate bottleneck of conventional cameras is
 not only row/column scanning speed. The complete imaging chain includes fixed
 exposure, analog readout, ADC conversion, and multi-bit data transfer.
 
+### 3. Sensor Array Timing Flow
+
+![Sensor Array Timing Flow](figures/sensor_array_timing_flow.svg)
+
+This figure compares the processing steps inside a conventional image sensor
+array and a spike camera array, with representative timing values from
+academic literature.
+
 ## Short Summary
 
 ```text
@@ -55,4 +63,3 @@ In other words:
 Conventional camera = "how much light was accumulated during this exposure?"
 Spike camera        = "when did this pixel accumulate enough light to fire?"
 ```
-

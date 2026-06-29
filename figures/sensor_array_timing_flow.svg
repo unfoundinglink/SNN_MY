@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1450" viewBox="0 0 2100 1450">
+  <defs>
+    <style>
+      .title { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 46px; font-weight: 700; fill: #111827; }
+      .subtitle { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 24px; fill: #475569; }
+      .head { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 32px; font-weight: 700; fill: #fff; }
+      .stepTitle { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 25px; font-weight: 700; fill: #102a43; }
+      .body { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 20px; fill: #243b53; }
+      .small { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 17px; fill: #52606d; }
+      .time { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 22px; font-weight: 700; fill: #7c2d12; }
+      .formula { font-family: Consolas, "Microsoft YaHei", monospace; font-size: 20px; fill: #0f172a; }
+      .src { font-family: "Microsoft YaHei", "SimHei", Arial, sans-serif; font-size: 16px; fill: #64748b; }
+      .blueHead { fill: #1d4ed8; rx: 18; }
+      .redHead { fill: #be123c; rx: 18; }
+      .blueBox { fill: #dbeafe; stroke: #2563eb; stroke-width: 2.2; rx: 16; }
+      .redBox { fill: #ffe4e6; stroke: #e11d48; stroke-width: 2.2; rx: 16; }
+      .yellowBox { fill: #fef3c7; stroke: #d97706; stroke-width: 2.2; rx: 14; }
+      .grayBox { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; rx: 14; }
+      .arrowBlue { stroke: #2563eb; stroke-width: 4; fill: none; marker-end: url(#arrBlue); }
+      .arrowRed { stroke: #e11d48; stroke-width: 4; fill: none; marker-end: url(#arrRed); }
+      .axis { stroke: #334155; stroke-width: 3; marker-end: url(#arrAxis); }
+      .tick { stroke: #64748b; stroke-width: 2; }
+      .dash { stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 7 7; }
+    </style>
+    <marker id="arrBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrRed" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#e11d48"/>
+    </marker>
+    <marker id="arrAxis" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#334155"/>
+    </marker>
+  </defs>
+
+  <rect width="2100" height="1450" fill="#ffffff"/>
+  <text x="1050" y="70" text-anchor="middle" class="title">传感器阵列处理流程与时间消耗对比</text>
+  <text x="1050" y="112" text-anchor="middle" class="subtitle">传统相机瓶颈是“固定曝光 + 模拟读出 + 多 bit ADC + 带宽”；脉冲相机把亮度转成 spike 时间结构</text>
+
+  <rect x="90" y="155" width="900" height="74" class="blueHead"/>
+  <text x="540" y="202" text-anchor="middle" class="head">传统 CMOS / RGB / 灰度帧相机</text>
+  <rect x="1110" y="155" width="900" height="74" class="redHead"/>
+  <text x="1560" y="202" text-anchor="middle" class="head">脉冲相机 / Spike Camera</text>
+
+  <!-- Conventional flow -->
+  <rect x="90" y="270" width="900" height="122" class="blueBox"/>
+  <text x="125" y="307" class="stepTitle">1. 光子到电子：固定曝光窗口内积分</text>
+  <text x="125" y="340" class="body">像素在设定曝光时间 Δt 内积累光电子；Δt 越短，进光越少，SNR 越低。</text>
+  <text x="125" y="370" class="time">时间尺度：由曝光设定决定；高速成像时常被迫压到 μs-ms 级</text>
+
+  <path d="M540 395 L540 430" class="arrowBlue"/>
+  <rect x="90" y="435" width="900" height="122" class="blueBox"/>
+  <text x="125" y="472" class="stepTitle">2. 采样保持 / 相关双采样 CDS</text>
+  <text x="125" y="505" class="body">曝光结束后读出模拟电荷，常用 CDS 抑制复位噪声和低频噪声。</text>
+  <text x="125" y="535" class="time">时间尺度：与读出前端和噪声要求相关，通常不能简单忽略</text>
+
+  <path d="M540 560 L540 595" class="arrowBlue"/>
+  <rect x="90" y="600" width="900" height="132" class="blueBox"/>
+  <text x="125" y="637" class="stepTitle">3. ADC：把模拟电荷转成多 bit 数字值</text>
+  <text x="125" y="670" class="body">每个像素输出 8/10/12 bit 甚至更高；高精度 ADC 是速度、功耗、面积瓶颈。</text>
+  <text x="125" y="700" class="time">论文例值：串行 SAR ADC 66.7 ksps → 约 15 μs / sample [2]</text>
+
+  <path d="M540 735 L540 770" class="arrowBlue"/>
+  <rect x="90" y="775" width="900" height="132" class="blueBox"/>
+  <text x="125" y="812" class="stepTitle">4. 行列读出 + 外部数据传输</text>
+  <text x="125" y="845" class="body">读出的是完整强度图；数据量 = 像素数 × bit depth × 帧率。</text>
+  <text x="125" y="875" class="time">论文例值：320k sensor pixels，10 Gbps link，约 4 kfps → 250 μs/frame [2]</text>
+
+  <path d="M540 910 L540 945" class="arrowBlue"/>
+  <rect x="90" y="950" width="900" height="122" class="blueBox"/>
+  <text x="125" y="987" class="stepTitle">5. 输出帧</text>
+  <text x="125" y="1020" class="formula">frame[t, y, x] = gray/RGB intensity</text>
+  <text x="125" y="1050" class="body">普通二值相机也是先得到亮度/模拟判断，再输出“亮/暗”。</text>
+
+  <!-- Spike flow -->
+  <rect x="1110" y="270" width="900" height="122" class="redBox"/>
+  <text x="1145" y="307" class="stepTitle">1. 每个像素持续积分光强</text>
+  <text x="1145" y="340" class="body">像素位置直接积累光强；不是等待统一曝光窗口结束后再生成灰度值。</text>
+  <text x="1145" y="370" class="time">时间尺度：到阈值时间 τ = Qth / I(x,y,t)，随光强变化</text>
+
+  <path d="M1560 395 L1560 430" class="arrowRed"/>
+  <rect x="1110" y="435" width="900" height="122" class="redBox"/>
+  <text x="1145" y="472" class="stepTitle">2. 本地阈值比较：到阈值即发放</text>
+  <text x="1145" y="505" class="body">像素级积分到阈值后异步 fire spike，然后复位继续积分。</text>
+  <text x="1145" y="535" class="time">时间尺度：比较/复位为本地电路动作；公开论文通常不单独给定该延迟</text>
+
+  <path d="M1560 560 L1560 595" class="arrowRed"/>
+  <rect x="1110" y="600" width="900" height="132" class="redBox"/>
+  <text x="1145" y="637" class="stepTitle">3. 二值 spike 状态形成</text>
+  <text x="1145" y="670" class="body">单个时间片只需记录 0/1；亮度由 spike 频率或 inter-spike interval 编码。</text>
+  <text x="1145" y="700" class="time">论文例值：binary spikes 可达 40,000 Hz → 25 μs / spike plane [1]</text>
+
+  <path d="M1560 735 L1560 770" class="arrowRed"/>
+  <rect x="1110" y="775" width="900" height="132" class="redBox"/>
+  <text x="1145" y="812" class="stepTitle">4. 高速读出 / 打包</text>
+  <text x="1145" y="845" class="body">通过行列复用、锁存或事件式读出把 0/1 状态输出；不做每时间片多 bit ADC。</text>
+  <text x="1145" y="875" class="time">400×250 示例：1 bit plane ≈ 100 kbit；8-bit 灰度帧 ≈ 800 kbit</text>
+
+  <path d="M1560 910 L1560 945" class="arrowRed"/>
+  <rect x="1110" y="950" width="900" height="122" class="redBox"/>
+  <text x="1145" y="987" class="stepTitle">5. 输出 spike stream</text>
+  <text x="1145" y="1020" class="formula">spike[t, y, x] ∈ {0, 1}</text>
+  <text x="1145" y="1050" class="body">1 表示“该时刻像素完成一次积分到阈值的发放事件”。</text>
+
+  <!-- Timeline comparison -->
+  <rect x="160" y="1135" width="1780" height="170" class="yellowBox"/>
+  <text x="1050" y="1176" text-anchor="middle" class="stepTitle">时间消耗的直观比较</text>
+  <line x1="250" y1="1222" x2="930" y2="1222" class="axis"/>
+  <rect x="270" y="1200" width="170" height="44" class="blueBox"/>
+  <text x="355" y="1229" text-anchor="middle" class="small">曝光 Δt</text>
+  <rect x="445" y="1200" width="135" height="44" class="blueBox"/>
+  <text x="512" y="1229" text-anchor="middle" class="small">CDS</text>
+  <rect x="585" y="1200" width="165" height="44" class="blueBox"/>
+  <text x="668" y="1229" text-anchor="middle" class="small">ADC</text>
+  <rect x="755" y="1200" width="150" height="44" class="blueBox"/>
+  <text x="830" y="1229" text-anchor="middle" class="small">多bit传输</text>
+  <text x="250" y="1276" class="small">传统相机：每帧得到完整多 bit 强度值，链路必须服务整个 frame。</text>
+
+  <line x1="1130" y1="1222" x2="1810" y2="1222" class="axis"/>
+  <rect x="1150" y="1200" width="240" height="44" class="redBox"/>
+  <text x="1270" y="1229" text-anchor="middle" class="small">连续积分到阈值</text>
+  <rect x="1395" y="1200" width="170" height="44" class="redBox"/>
+  <text x="1480" y="1229" text-anchor="middle" class="small">本地发放</text>
+  <rect x="1570" y="1200" width="190" height="44" class="redBox"/>
+  <text x="1665" y="1229" text-anchor="middle" class="small">1 bit读出</text>
+  <text x="1130" y="1276" class="small">脉冲相机：不为每个时间片测多 bit 灰度；时间间隔本身携带光强信息。</text>
+
+  <!-- Footnotes -->
+  <rect x="90" y="1340" width="1920" height="72" class="grayBox"/>
+  <text x="120" y="1367" class="src">[1] Zheng et al., “SpikeCV: Open a Continuous Computer Vision Era,” 2023: spike camera pixels accumulate light and fire asynchronously; binary spikes can reach 40,000 Hz.</text>
+  <text x="120" y="1395" class="src">[2] Quinn et al., “A Cryogenic readout integrated circuit with analog pile-up and in-Pixel ADC for high frame rate Skipper CCD-in-CMOS Sensors,” 2024: SAR ADC 66.7 ksps; 320k sensor pixels over 10 Gbps enable ~4 kfps.</text>
+</svg>
